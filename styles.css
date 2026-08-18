@@ -384,6 +384,8 @@ input, select { font-family: inherit; }
 .footer a:hover { text-decoration: underline; }
 
 /* ---------- 弹窗 ---------- */
+.modal-mask[hidden] { display: none; }
+
 .modal-mask {
   position: fixed;
   inset: 0;
