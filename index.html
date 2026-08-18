@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Fund OS · 课题组流动资金管理 — 简洁明了的经费流水账本" />
+  <meta name="theme-color" content="#00573F" />
+  <title>Fund OS · 课题组经费管理</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2300573F'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>¥</text></svg>" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- ===== 顶部导航 ===== -->
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <span class="brand-mark">¥</span>
+          <span class="brand-name">Fund OS</span>
+          <span class="brand-sub" id="groupName" title="点击修改课题组名称">课题组经费</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" id="btnExport" title="导出 JSON 备份">导出</button>
+          <label class="btn btn-ghost" for="importFile" title="导入 JSON 备份">导入</label>
+          <input type="file" id="importFile" accept="application/json" hidden />
+          <button class="btn btn-primary" id="btnAdd">＋ 记一笔</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- ===== 余额总览 ===== -->
+      <section class="hero">
+        <div class="hero-balance">
+          <p class="hero-label">当前结余</p>
+          <h1 class="hero-amount" id="balance">¥ 0.00</h1>
+          <p class="hero-meta" id="recordCount">共 0 笔记录</p>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-card">
+            <p class="stat-label">累计收入</p>
+            <p class="stat-value income" id="totalIncome">¥ 0.00</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">累计支出</p>
+            <p class="stat-value expense" id="totalExpense">¥ 0.00</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">本月支出</p>
+            <p class="stat-value" id="monthExpense">¥ 0.00</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 分类支出概览 ===== -->
+      <section class="section" id="categorySection">
+        <h2 class="section-title">支出构成</h2>
+        <div class="category-bars" id="categoryBars"></div>
+      </section>
+
+      <!-- ===== 流水明细 ===== -->
+      <section class="section">
+        <div class="section-head">
+          <h2 class="section-title">流水明细</h2>
+          <div class="filters">
+            <input type="search" id="searchInput" class="search" placeholder="搜索项目 / 备注 / 经手人…" />
+            <div class="filter-tabs" id="filterTabs">
+              <button class="tab active" data-filter="all">全部</button>
+              <button class="tab" data-filter="expense">支出</button>
+              <button class="tab" data-filter="income">收入</button>
+            </div>
+          </div>
+        </div>
+        <div class="record-list" id="recordList"></div>
+        <p class="empty" id="emptyState" hidden>暂无记录，点击右上角「＋ 记一笔」开始记账。</p>
+      </section>
+
+      <footer class="footer">
+        <p>Fund OS · 数据保存在本机浏览器 localStorage · 开源于 <a href="https://github.com/jacketlong23/Fund-OS" target="_blank" rel="noopener">GitHub</a></p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- ===== 记账弹窗 ===== -->
+  <div class="modal-mask" id="modalMask" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <h3 id="modalTitle">记一笔</h3>
+        <button class="modal-close" id="btnCloseModal" aria-label="关闭">×</button>
+      </div>
+      <form id="recordForm" class="modal-body">
+        <div class="type-switch" id="typeSwitch">
+          <button type="button" class="type-btn active" data-type="expense">支出</button>
+          <button type="button" class="type-btn" data-type="income">收入</button>
+        </div>
+
+        <label class="field">
+          <span class="field-label">金额（元）</span>
+          <input type="number" id="fAmount" min="0.01" step="0.01" placeholder="0.00" required inputmode="decimal" />
+        </label>
+
+        <label class="field">
+          <span class="field-label">项目 / 用途</span>
+          <input type="text" id="fItem" placeholder="例如：实验耗材采购" required maxlength="40" />
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">类别</span>
+            <select id="fCategory"></select>
+          </label>
+          <label class="field">
+            <span class="field-label">日期</span>
+            <input type="date" id="fDate" required />
+          </label>
+        </div>
+
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">经手人</span>
+            <input type="text" id="fHandler" placeholder="选填" maxlength="20" />
+          </label>
+          <label class="field">
+            <span class="field-label">备注</span>
+            <input type="text" id="fNote" placeholder="选填" maxlength="60" />
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="btnSubmit">保存记录</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== 确认删除弹窗 ===== -->
+  <div class="modal-mask" id="confirmMask" hidden>
+    <div class="modal modal-sm" role="alertdialog" aria-modal="true">
+      <div class="modal-body">
+        <p class="confirm-text">确定删除这条记录吗？删除后不可恢复。</p>
+        <div class="confirm-actions">
+          <button class="btn btn-ghost" id="btnCancelDelete">取消</button>
+          <button class="btn btn-danger" id="btnConfirmDelete">删除</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
