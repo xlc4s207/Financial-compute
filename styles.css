@@ -536,3 +536,64 @@ input, select { font-family: inherit; }
 
   .cat-row { grid-template-columns: 72px 1fr auto; gap: 10px; }
 }
+
+/* ---------- 报销跟踪 ---------- */
+.claim-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.claim-stat {
+  min-width: 0;
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  padding: 13px 16px;
+}
+.claim-stat-label { color: var(--ink-2); font-size: 12px; }
+.claim-stat-value { margin-top: 3px; color: var(--green); font-size: 17px; font-weight: 650; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.claim-stat-value.outstanding { color: var(--red); }
+.claim-list { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); box-shadow: var(--shadow); }
+.claim-empty { padding: 24px 20px; text-align: center; color: var(--ink-3); font-size: 13px; }
+.claim-card { padding: 18px 20px; }
+.claim-card + .claim-card { border-top: 1px solid var(--line); }
+.claim-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+.claim-main { min-width: 0; }
+.claim-main h3 { font-size: 15px; font-weight: 600; line-height: 1.45; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.claim-main p { margin-top: 2px; color: var(--ink-3); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.claim-money { flex: 0 0 auto; text-align: right; }
+.claim-money strong { display: block; color: var(--red); font-size: 16px; font-variant-numeric: tabular-nums; }
+.claim-money span { color: var(--ink-3); font-size: 11px; }
+.claim-progress { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; margin-top: 13px; color: var(--ink-2); font-size: 12px; font-variant-numeric: tabular-nums; }
+.claim-progress-track { height: 7px; overflow: hidden; border-radius: 99px; background: var(--bg); }
+.claim-progress-fill { height: 100%; min-width: 2px; background: var(--green); border-radius: inherit; transition: width 0.25s ease; }
+.claim-actions { display: flex; align-items: center; gap: 12px; margin-top: 13px; }
+.btn-small { padding: 6px 11px; font-size: 12px; }
+.btn-small:disabled { cursor: not-allowed; opacity: 0.45; }
+.text-action { padding: 0; border: 0; background: transparent; color: var(--ink-2); font-size: 12px; }
+.text-action:hover { color: var(--ink); text-decoration: underline; }
+.danger-action { color: var(--red); }
+.batch-list { margin-top: 14px; border-top: 1px solid var(--line); }
+.batch-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 12px; padding: 10px 0 0; }
+.batch-main { min-width: 0; display: flex; align-items: baseline; gap: 8px; overflow: hidden; }
+.batch-person { flex: 0 0 auto; color: var(--ink); font-size: 13px; font-weight: 500; }
+.batch-meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-3); font-size: 12px; }
+.batch-amount { color: var(--green); font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.batch-empty { margin-top: 13px; color: var(--ink-3); font-size: 12px; }
+.form-context { margin-bottom: 16px; padding: 9px 12px; border-radius: 8px; background: var(--green-soft); color: var(--green); font-size: 13px; }
+.check-field { display: flex; align-items: center; gap: 8px; margin: 2px 0 14px; color: var(--ink-2); font-size: 13px; }
+.check-field input { width: 16px; height: 16px; accent-color: var(--green); }
+@media (max-width: 640px) {
+  .topbar-actions #btnAddClaim { display: none; }
+  .claim-overview { gap: 8px; }
+  .claim-stat { padding: 11px 12px; }
+  .claim-stat-value { font-size: 14px; }
+  .claim-card { padding: 15px 14px; }
+  .claim-head { gap: 10px; }
+  .claim-progress { grid-template-columns: 1fr; gap: 5px; }
+  .batch-row { grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; }
+  .batch-main { display: block; }
+  .batch-meta { display: block; margin-top: 1px; }
+}

@@ -23,6 +23,7 @@
           <button class="btn btn-ghost" id="btnExport" title="导出 JSON 备份">导出</button>
           <label class="btn btn-ghost" for="importFile" title="导入 JSON 备份">导入</label>
           <input type="file" id="importFile" accept="application/json" hidden />
+          <button class="btn btn-ghost" id="btnAddClaim">报销管理</button>
           <button class="btn btn-primary" id="btnAdd">＋ 记一笔</button>
         </div>
       </div>
@@ -56,6 +57,19 @@
       <section class="section" id="categorySection">
         <h2 class="section-title">支出构成</h2>
         <div class="category-bars" id="categoryBars"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2 class="section-title">报销跟踪</h2>
+          <button class="btn btn-ghost" id="btnAddClaimInline">＋ 新增报销事项</button>
+        </div>
+        <div class="claim-overview">
+          <div class="claim-stat"><p class="claim-stat-label">待报销</p><p class="claim-stat-value outstanding" id="claimOutstanding">¥ 0.00</p></div>
+          <div class="claim-stat"><p class="claim-stat-label">已报销</p><p class="claim-stat-value" id="claimReimbursed">¥ 0.00</p></div>
+          <div class="claim-stat"><p class="claim-stat-label">本月报销</p><p class="claim-stat-value" id="claimMonthReimbursed">¥ 0.00</p></div>
+        </div>
+        <div class="claim-list" id="claimList"></div>
       </section>
 
       <!-- ===== 流水明细 ===== -->
@@ -144,8 +158,45 @@
     </div>
   </div>
 
+  <div class="modal-mask" id="claimMask" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="claimModalTitle">
+      <div class="modal-head"><h3 id="claimModalTitle">新增报销事项</h3><button class="modal-close" id="btnCloseClaim" aria-label="关闭">×</button></div>
+      <form id="claimForm" class="modal-body">
+        <label class="field"><span class="field-label">采购事项</span><input type="text" id="claimTitle" placeholder="例如：主机配件采购" required maxlength="60" /></label>
+        <div class="field-row">
+          <label class="field"><span class="field-label">应报总额（元）</span><input type="number" id="claimTotal" min="0.01" step="0.01" placeholder="0.00" required inputmode="decimal" /></label>
+          <label class="field"><span class="field-label">采购日期</span><input type="date" id="claimPurchaseDate" required /></label>
+        </div>
+        <div class="field-row">
+          <label class="field"><span class="field-label">采购经手人</span><input type="text" id="claimPurchaser" placeholder="选填" maxlength="20" /></label>
+          <label class="field"><span class="field-label">备注</span><input type="text" id="claimNote" placeholder="选填" maxlength="80" /></label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="btnClaimSubmit">保存事项</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="reimbursementMask" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="reimbursementModalTitle">
+      <div class="modal-head"><h3 id="reimbursementModalTitle">登记报销批次</h3><button class="modal-close" id="btnCloseReimbursement" aria-label="关闭">×</button></div>
+      <form id="reimbursementForm" class="modal-body">
+        <p class="form-context" id="reimbursementClaimName"></p>
+        <div class="field-row">
+          <label class="field"><span class="field-label">报销人员</span><input type="text" id="reimbursementPerson" placeholder="例如：张三" required maxlength="20" /></label>
+          <label class="field"><span class="field-label">本次金额（元）</span><input type="number" id="reimbursementAmount" min="0.01" step="0.01" placeholder="0.00" required inputmode="decimal" /></label>
+        </div>
+        <div class="field-row">
+          <label class="field"><span class="field-label">发放日期</span><input type="date" id="reimbursementDate" required /></label>
+          <label class="field"><span class="field-label">备注</span><input type="text" id="reimbursementNote" placeholder="选填" maxlength="80" /></label>
+        </div>
+        <label class="check-field"><input type="checkbox" id="reimbursementSync" checked /><span>同步记入流水</span></label>
+        <button type="submit" class="btn btn-primary btn-block">保存报销批次</button>
+      </form>
+    </div>
+  </div>
   <div class="toast" id="toast" hidden></div>
 
   <script src="app.js"></script>
+  <script src="reimbursements.js"></script>
 </body>
 </html>
