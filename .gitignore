@@ -2,3 +2,8 @@
 Thumbs.db
 node_modules/
 .workbuddy/
+
+.env
+__pycache__/
+*.pyc
+fund-os-backup-*.json

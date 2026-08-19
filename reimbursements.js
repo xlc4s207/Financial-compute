@@ -235,5 +235,5 @@
     bind();
     render();
   }
-  init();
+  (window.FundOSReady || Promise.resolve()).then(init);
 })();

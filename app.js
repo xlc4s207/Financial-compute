@@ -1,6 +1,6 @@
 /* ============================================================
    Fund OS · 课题组经费管理
-   纯前端实现：localStorage 持久化 + 种子示例数据
+   浏览器本地缓存；部署后由服务器同步共享数据
    ============================================================ */
 
 (function () {
@@ -64,7 +64,7 @@
   }
 
   /* ---------- 状态 ---------- */
-  var records = load();
+  var records = [];
   var filter = 'all';
   var keyword = '';
   var editingId = null;
@@ -76,6 +76,7 @@
       var raw = localStorage.getItem(STORE_KEY);
       if (raw) return JSON.parse(raw);
     } catch (e) { /* 数据损坏时回落到种子数据 */ }
+    if (window.FundOSServerManaged) return [];
     var seed = seedData();
     localStorage.setItem(STORE_KEY, JSON.stringify(seed));
     return seed;
@@ -464,6 +465,7 @@
 
   /* ---------- 启动 ---------- */
   function init() {
+    records = load();
     var name = localStorage.getItem(NAME_KEY);
     if (name) {
       $('groupName').textContent = name;
@@ -473,5 +475,5 @@
     renderAll();
   }
 
-  init();
+  (window.FundOSReady || Promise.resolve()).then(init);
 })();
